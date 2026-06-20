@@ -1,11 +1,10 @@
 # Mini Project 2 – Object Counting
 
-Nama : Hasna Widyaningrum
-NRP  :5024241004
+Nama        : Hasna Widyaningrum
 
-## Mata Kuliah
+NRP         : 5024241004
 
-Pengolahan Citra dan Video
+Mata Kuliah : Pengolahan Citra dan Video
 
 ---
 
