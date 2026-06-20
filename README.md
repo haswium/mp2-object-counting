@@ -366,29 +366,15 @@ Ketiga metode menghasilkan performa yang berbeda karena masing-masing menggunaka
 
 ### HSV Segmentation
 
-Metode HSV memanfaatkan informasi warna sehingga mampu memisahkan sebagian besar kendaraan berwarna terang dari area aspal. Hasil deteksi yang diperoleh merupakan yang paling mendekati jumlah kendaraan sebenarnya.
-
-Namun metode ini masih memiliki beberapa kelemahan, seperti kendaraan yang hanya terdeteksi sebagian serta kendaraan yang saling berdekatan dan tergabung menjadi satu komponen.
-
----
+Metode HSV memanfaatkan informasi warna sehingga mampu memisahkan sebagian besar kendaraan berwarna terang dari area aspal. Hasil deteksi yang diperoleh merupakan yang paling mendekati jumlah kendaraan sebenarnya. Namun metode ini masih memiliki beberapa kelemahan, seperti kendaraan yang hanya terdeteksi sebagian serta kendaraan yang saling berdekatan dan tergabung menjadi satu komponen.
 
 ### Edge Detection
 
-Metode Edge Detection memanfaatkan informasi tepi objek menggunakan algoritma Canny.
-
-Hasil visualisasi menunjukkan bahwa bentuk kendaraan dapat terlihat dengan cukup jelas. Akan tetapi, banyak kendaraan tidak membentuk region tertutup sehingga contour tidak dapat menganggapnya sebagai objek yang valid untuk dihitung.
-
-Akibatnya jumlah kendaraan yang terdeteksi menjadi jauh lebih sedikit dibandingkan kondisi sebenarnya.
-
----
+Metode Edge Detection memanfaatkan informasi tepi objek menggunakan algoritma Canny. Hasil visualisasi menunjukkan bahwa bentuk kendaraan dapat terlihat dengan cukup jelas. Akan tetapi, banyak kendaraan tidak membentuk region tertutup sehingga contour tidak dapat menganggapnya sebagai objek yang valid untuk dihitung. Akibatnya jumlah kendaraan yang terdeteksi menjadi jauh lebih sedikit dibandingkan kondisi sebenarnya.
 
 ### Otsu Thresholding
 
-Metode Otsu Thresholding melakukan segmentasi berdasarkan intensitas piksel.
-
-Metode ini menghasilkan jumlah objek yang paling banyak karena satu kendaraan sering terpecah menjadi beberapa komponen yang berbeda. Selain itu marka parkir dan objek terang lainnya juga ikut terdeteksi sebagai objek.
-
-Akibatnya terjadi overcounting yang cukup signifikan.
+Metode Otsu Thresholding melakukan segmentasi berdasarkan intensitas piksel. Metode ini menghasilkan jumlah objek yang paling banyak karena satu kendaraan sering terpecah menjadi beberapa komponen yang berbeda. Selain itu marka parkir dan objek terang lainnya juga ikut terdeteksi sebagai objek. Akibatnya terjadi overcounting yang cukup signifikan.
 
 ---
 
