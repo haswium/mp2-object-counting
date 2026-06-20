@@ -1,8 +1,8 @@
 # Mini Project 2 – Object Counting
 
-Nama        : Hasna Widyaningrum
+Nama : Hasna Widyaningrum
 
-NRP         : 5024241004
+NRP : 5024241004
 
 Mata Kuliah : Pengolahan Citra dan Video
 
@@ -12,9 +12,9 @@ Mata Kuliah : Pengolahan Citra dan Video
 
 Mini Project 2 bertujuan untuk menghitung jumlah kendaraan pada citra aerial area parkir menggunakan teknik pengolahan citra digital tanpa menggunakan deep learning maupun model pre-trained. Pada proyek ini dilakukan tiga pendekatan berbeda yang mewakili materi yang telah dipelajari, yaitu:
 
-1. Color-Based Detection (HSV Segmentation)
-2. Edge-Based Detection (Canny Edge Detection)
-3. Thresholding + Morphology + Connected Components
+1. HSV Segmentation
+2. Edge Detection
+3. Otsu Thresholding
 
 Tujuan utama proyek ini adalah mengeksplorasi kemampuan berbagai teknik pengolahan citra dalam melakukan object counting serta membandingkan kelebihan dan kekurangan masing-masing metode.
 
@@ -26,7 +26,7 @@ Input citra:
 
 ![Original](output/steps/00_original.png)
 
-Citra merupakan foto aerial area parkir yang berisi sejumlah kendaraan dengan berbagai warna, ukuran, dan posisi parkir.
+Citra merupakan foto aerial area parkir yang berisi 29 kendaraan dengan berbagai warna, ukuran, dan posisi parkir.
 
 ---
 
