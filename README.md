@@ -30,9 +30,7 @@ Tujuan utama proyek ini adalah mengeksplorasi kemampuan berbagai teknik pengolah
 
 Input citra:
 
-```text
-input/parking.jpg
-```
+![Original](output/steps/00_original.png)
 
 Citra merupakan foto aerial area parkir yang berisi sejumlah kendaraan dengan berbagai warna, ukuran, dan posisi parkir.
 
@@ -42,52 +40,121 @@ Citra merupakan foto aerial area parkir yang berisi sejumlah kendaraan dengan be
 
 ## Tujuan
 
-Memisahkan objek kendaraan dari latar belakang menggunakan informasi warna pada ruang warna HSV.
+Percobaan ini bertujuan mendeteksi kendaraan berdasarkan informasi warna menggunakan ruang warna HSV (Hue, Saturation, Value). Pendekatan ini dipilih karena HSV memisahkan informasi warna dan kecerahan sehingga diharapkan kendaraan dapat dibedakan dari latar belakang area parkir.
 
 ## Pipeline
 
-RGB Image
-→ HSV Conversion
-→ Analisis H, S, V
-→ HSV Thresholding
-→ Morphological Opening
-→ Morphological Closing
-→ Connected Components
-→ Bounding Box
-→ Counting
+```text
+RGB → HSV → Threshold → Morphology → Connected Components → Counting
+```
 
-## Visualisasi Tahapan
+---
 
-* 01_hue.png
-* 02_saturation.png
-* 03_value.png
-* 04_histogram_hsv.png
-* 05_hue_mask.png
-* 06_saturation_mask.png
-* 07_value_mask.png
-* 08_hsv_segmentation.png
-* 09_hsv_morphology.png
-* 10_hsv_bounding_box.png
+## Tahap 1 – Konversi RGB ke HSV
 
-## Analisis
+### Hue Channel
 
-Konversi ke ruang warna HSV dilakukan untuk memisahkan informasi warna dan intensitas. Histogram H, S, dan V digunakan untuk memahami distribusi piksel pada citra sebelum dilakukan segmentasi.
+![Hue](output/steps/01_hue.png)
 
-Segmentasi HSV mampu mendeteksi sebagian besar objek berwarna terang yang memiliki kontras cukup tinggi terhadap aspal. Setelah dilakukan operasi Opening dan Closing, noise berukuran kecil dapat dikurangi sehingga objek menjadi lebih mudah dihitung menggunakan Connected Components.
+Kanal Hue merepresentasikan jenis warna pada citra. Nilai Hue digunakan untuk membedakan warna objek tanpa dipengaruhi oleh tingkat kecerahan.
 
-Namun hasil deteksi masih belum sempurna. Beberapa kendaraan hanya terdeteksi sebagian, misalnya hanya bagian atap atau kap kendaraan. Selain itu terdapat kendaraan yang saling berdekatan sehingga tergabung menjadi satu komponen besar. Oleh karena itu jumlah objek yang terdeteksi tidak selalu merepresentasikan jumlah kendaraan sebenarnya secara akurat.
+### Saturation Channel
 
-## Hasil
+![Saturation](output/steps/02_saturation.png)
+
+Kanal Saturation menunjukkan tingkat kejenuhan warna. Nilai yang tinggi menunjukkan warna yang lebih kuat, sedangkan nilai rendah menunjukkan warna yang mendekati abu-abu.
+
+### Value Channel
+
+![Value](output/steps/03_value.png)
+
+Kanal Value merepresentasikan tingkat kecerahan piksel. Objek yang lebih terang akan memiliki nilai Value yang lebih tinggi dibandingkan area yang lebih gelap.
+
+### Histogram HSV
+
+![Histogram HSV](output/steps/04_histogram_hsv.png)
+
+Histogram digunakan untuk melihat distribusi nilai piksel pada masing-masing kanal HSV. Informasi ini membantu memahami karakteristik citra sebelum dilakukan proses segmentasi.
+
+### Analisis Tahap 1
+
+Dari visualisasi HSV terlihat bahwa kanal Value memberikan kontras yang cukup baik antara kendaraan dan aspal. Kanal Hue juga menunjukkan perbedaan warna antar objek, sedangkan Saturation cenderung kurang memberikan pemisahan yang jelas pada citra ini.
+
+---
+
+## Tahap 2 – Thresholding pada Kanal HSV
+
+### Hue Mask
+
+![Hue Mask](output/steps/05_hue_mask.png)
+
+Hasil thresholding pada kanal Hue.
+
+### Saturation Mask
+
+![Saturation Mask](output/steps/06_saturation_mask.png)
+
+Hasil thresholding pada kanal Saturation.
+
+### Value Mask
+
+![Value Mask](output/steps/07_value_mask.png)
+
+Hasil thresholding pada kanal Value.
+
+### Analisis Tahap 2
+
+Thresholding dilakukan untuk memisahkan piksel yang dianggap sebagai objek dari latar belakang. Dari ketiga kanal, terlihat bahwa setiap kanal memberikan hasil segmentasi yang berbeda. Kanal Value cenderung mempertahankan objek terang, sedangkan Hue dan Saturation memberikan hasil yang lebih bervariasi tergantung warna kendaraan.
+
+---
+
+## Tahap 3 – HSV Segmentation
+
+![HSV Segmentation](output/steps/08_hsv_segmentation.png)
+
+Segmentasi dilakukan menggunakan fungsi `cv2.inRange()` dengan rentang HSV tertentu. Piksel yang memenuhi rentang tersebut akan dianggap sebagai objek, sedangkan piksel lainnya dianggap sebagai latar belakang.
+
+### Analisis Tahap 3
+
+Pada tahap ini sebagian besar kendaraan berwarna terang berhasil dipisahkan dari area aspal. Namun masih terdapat area non-kendaraan yang ikut tersegmentasi dan beberapa kendaraan berwarna gelap yang tidak terdeteksi dengan baik.
+
+---
+
+## Tahap 4 – Morphology
+
+![Morphology Result](output/steps/09_hsv_morphology.png)
+
+Operasi Morphological Opening digunakan untuk menghilangkan noise kecil, sedangkan Morphological Closing digunakan untuk menyambungkan bagian objek yang terputus.
+
+### Analisis Tahap 4
+
+Morphology membantu membersihkan hasil segmentasi sehingga objek menjadi lebih jelas dan lebih mudah dihitung. Beberapa noise berhasil dihilangkan, namun masih terdapat objek yang saling menempel dan beberapa kendaraan yang hanya tersegmentasi sebagian.
+
+---
+
+## Tahap 5 – Connected Components dan Counting
+
+![HSV Bounding Box](output/steps/10_hsv_bounding_box.png)
+
+Connected Components digunakan untuk mencari komponen yang saling terhubung pada hasil segmentasi. Komponen yang memiliki luas sesuai kriteria dianggap sebagai objek kendaraan dan diberikan bounding box.
+
+### Hasil
 
 Jumlah objek terdeteksi:
 
 ```text
-HSV = 31
+31
 ```
 
-Metode ini memberikan hasil yang paling mendekati jumlah kendaraan pada citra dibandingkan dua metode lainnya.
+### Analisis Tahap 5
+
+Metode HSV menghasilkan jumlah deteksi yang paling mendekati jumlah kendaraan pada citra. Akan tetapi, hasil deteksi belum sepenuhnya akurat. Beberapa kendaraan hanya terdeteksi sebagian sehingga bounding box tidak mencakup seluruh kendaraan. Selain itu terdapat kendaraan yang berdekatan dan tergabung menjadi satu komponen besar. Oleh karena itu jumlah objek yang terdeteksi tidak selalu sama dengan jumlah kendaraan sebenarnya.
 
 ---
+
+## Kesimpulan Percobaan 1
+
+HSV Segmentation mampu memanfaatkan informasi warna untuk membedakan kendaraan dari latar belakang. Dibandingkan metode lain yang diuji pada mini project ini, pendekatan HSV menghasilkan jumlah deteksi yang paling mendekati kondisi sebenarnya. Namun metode ini masih sensitif terhadap variasi warna kendaraan dan kondisi pencahayaan sehingga belum mampu mendeteksi seluruh kendaraan secara sempurna.
 
 # Percobaan 2 – Edge-Based Detection
 
